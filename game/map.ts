@@ -36,7 +36,7 @@ export class Board {
         return this.axial_distance(a1.q, a1.r, a2.q, a2.r);
     }
 
-    private getTileCoords(tile: Tile): {x: number, y: number} {
+    private getTileCoords(tile: Tile): { x: number, y: number } {
         const index = this.getTileIndex(tile);
         return {x: index % BOARD_WIDTH, y: Math.floor(index / BOARD_WIDTH)};
     }
@@ -54,7 +54,10 @@ export class Board {
         for (let i = 0; i < 6; i++) {
             let part = PARTS_LAYOUT[order[i]];
             for (let j = 0; j < part.length; j++) {
-                tiles.push(new Tile(part[j]));
+                let tile = new Tile(part[j]);
+                if (PART_PUMA_TERRITORY[i].indexOf(j) != -1) tile.hasPuma = true;
+                if (PART_BEAR_TERRITORY[i].indexOf(j) != -1) tile.hasBear = true;
+                tiles.push(tile);
             }
         }
 
@@ -75,21 +78,31 @@ export class Tile {
     public biome: Biome
     public hasBear: boolean;
     public hasPuma: boolean;
-    public hasStone: boolean;
-    public hasCabin: boolean;
+    public stone: StructureColor = StructureColor.None;
+    public cabin: StructureColor = StructureColor.None;
     public index: number = -1;
 
     constructor(biome: Biome) {
         this.biome = biome;
         this.hasBear = false;
         this.hasPuma = false;
-        this.hasStone = false;
-        this.hasCabin = false;
+    }
+
+    public get hasStone() {
+        return this.stone != StructureColor.None;
+    }
+
+    public get hasCabin() {
+        return this.cabin != StructureColor.None;
     }
 }
 
 export enum Biome {
     Forest, Desert, Swamp, Lake, Mountain
+}
+
+export enum StructureColor {
+    None, White, Green, Blue, Black
 }
 
 const PARTS_LAYOUT = [

@@ -1,20 +1,36 @@
-// import {Server} from "socket.io";
-//
-// const io = new Server(3000);
-//
-// io.on("connection", (socket) => {
-//
-// });
-//
-
-import {Biome, Board, Tile} from "./map";
-import Clue, {IN_A_TILE_WITH_Y, IN_OR_WITHIN_X_TILES_OF_Y} from "./clue";
-
-const board = Board.fromPartOrder([0, 1, 2, 3, 4, 5]);
-
-const testClue = new Clue(IN_A_TILE_WITH_Y(t => t.biome == Biome.Desert));
-const tiles = testClue.filtering(board).getTiles();
-console.log(tiles.map(t => t.index), tiles.length, "/", board.getTiles().length);
+import WebSocket from 'ws';
+import config from "./config";
 
 
-console.log(board.getTilesDistance(board.getTile(54), board.getTile(40)));
+class Message {
+    type: string;
+    data: any;
+
+    constructor(type: string, data: any) {
+        this.type = type;
+        this.data = data;
+    }
+
+    public toString() {
+        return JSON.stringify(this);
+    }
+
+    public static parse(str: string) {
+        const msg = JSON.parse(str);
+        return new Message(msg.type, msg.data);
+    }
+}
+
+class HandshakeMessage extends Message {
+    constructor(version: string, roomId: string, playerIndex: number) {
+        super("handshake", { version, roomId, playerIndex });
+    }
+}
+
+const wsServer = new WebSocket.Server({port: 8080});
+wsServer.on("connection", (socket: WebSocket) => {
+    socket.send(new HandshakeMessage(config.version, "room1", 0).toString());
+    socket.on("message", (data: any) => {
+        console.log(data.toString());
+    });
+});
