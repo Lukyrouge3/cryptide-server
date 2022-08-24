@@ -1,0 +1,50 @@
+@startuml Protocol
+title Diagram of Cryptide's protocol
+
+start
+  group Handshake
+    :Handshake;
+    if (Create room ?) then (yes)
+      :Create the room and give the id;
+    endif
+    :Join the room using the id;
+  endgroup
+  group Room
+    group Pre-game
+      :User joined the room;
+      :Notify the other players;
+      while (Not enough players ?) is (not enough)
+        :Wait for the other players;
+      endwhile (enough)
+      :Start the game;
+      :Generate the map and the clues;
+      :Give every player it's clue;
+      repeat
+          :Place square;
+      repeat while (Every player placed 2 squares ?) is (not done)
+    endgroup
+    group Game
+      repeat
+        if (Current player (ply1) asks another player (ply2) about a tile) then (guess)
+        :Current player takes a guess;
+          if (Nobody can say "no") then
+            :Current player places a square on the map;
+          else (win)
+            :Current player wins;
+            break
+          endif
+        else (question)
+          if (ply2 says no) then (no)
+            :ply1 places a square;
+          endif
+        endif
+      repeat while (Repeat) is (Next player)
+    endgroup
+    group Post-game
+    label post
+      :Show game over and display all clues to everyone;
+      
+    endgroup
+  endgroup
+end
+@enduml
