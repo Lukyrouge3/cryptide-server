@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import config from "./config";
-import { Message, MessageHandler } from './protocol/message';
+import { Message, MessageHandler } from './protocol/messages';
 import { RoomsManager } from './protocol/room';
 
 const wsServer = new WebSocket.Server({ port: 8080 });
