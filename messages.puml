@@ -1,0 +1,93 @@
+@startuml Classes
+interface Message<extends Serializable> {
+    type: string
+    data: any
+
+    static void parse(data: any): Message
+}
+
+interface Serializable {
+    toString(): string
+}
+
+class HandshakeMessage<extends Message> {
+    type = 'handshake'
+    data = {}
+}
+
+class RoomInformationsMessage<extends Message> {
+    type = 'roomInformations'
+    data: RoomInformations
+}
+
+class RoomInformations<extends Serializable> {
+    id: string
+    players: Player[]
+    started: boolean
+    currentPlayer: Player
+}
+
+class Player<extends Serializable> {
+    id: string
+    name: string
+    ready: boolean
+}
+
+class CreateRoomMessage<extends Message> {
+    type = 'createRoom'
+    data = {}
+}
+
+class JoinRoomMessage<extends Message> {
+    type = 'joinRoom'
+    data: {id: string}
+}
+
+class GameInformations<extends Serializable> {
+    partsOrder: number[]
+    stones: Map<number, number>
+    cabins: Map<number, number>
+    clue: string
+}
+
+class GameInformationsMessage<extends Message> {
+    type = 'gameInformations'
+    data: GameInformations
+}
+
+class PlayerTurnMessage<extends Message> {
+    type = 'playerTurn'
+    data: {player: number}
+}
+
+class PlayerAskMessage<extends Message> {
+    type = 'playerAsk'
+    data: {player: number, tile: number}
+}
+
+class PlayerAnwserMessage<extends Message> {
+    type = 'playerAnwser'
+    data: {possible: boolean, player: number, tile: number}
+}
+
+class PlaceSquareMessage<extends Message> {
+    type = 'placeSquare'
+    data: {player: number, tile: number}
+}
+
+class PlayerGuessMessage<extends Message> {
+    type = 'playerGuess'
+    data: {player: number, tile: number}
+}
+
+class PlayerGuessAnwserMessage<extends Message> {
+    type = 'playerGuessAnwser'
+    data: {possible: boolean, player: number, tile: number}
+}
+
+class PlayerWinMessage<extends Message> {
+    type = 'playerWin'
+    data: {player: number}
+}
+
+@enduml
