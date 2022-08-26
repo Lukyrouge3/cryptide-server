@@ -21,7 +21,7 @@ export class Room {
     }
 
     getRoomInformations(): RoomInformations {
-        return new RoomInformations(this.id, this.clients.map((c, id) => new Player(id.toString(), "Player " + id)));// TODO: Actually manage name and id ...
+        return new RoomInformations(this.id, this.clients.map((c, id) => new Player(id.toString(), "Player " + id, c)));// TODO: Actually manage name and id ...
     }
 }
 

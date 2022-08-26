@@ -1,18 +1,21 @@
 import { Serializable } from "./interfaces";
+import WebSocket from "ws";
 
 export class Player implements Serializable {
 
     id: string;
     name: string;
     ready: boolean = false;
+    socket: WebSocket;
 
-    constructor(id: string, name: string) {
+    constructor(id: string, name: string, socket: WebSocket) {
         this.id = id;
         this.name = name;
+        this.socket = socket;
     }
 
     toString(): string {
-        return JSON.stringify(this);
+        return JSON.stringify({name: this.name, id: this.id, ready: this.ready});
     }
 }
 
